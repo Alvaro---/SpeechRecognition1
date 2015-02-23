@@ -7,6 +7,7 @@
 
     <string name="intro">Presiona el boton, habla y escucha¡</string>
     <string name="speech">Habla ahora</string>
+    <string name="wordIntro">Palabra Sugerida words&#8230;</string>
 
 
 </resources>

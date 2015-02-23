@@ -16,8 +16,30 @@
         android:textColor="#ffff33"/>
 
     <Button
+        android:id="@+id/btnHablar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/speech"/>
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:text="@string/wordIntro"
+        android:textStyle="italic"/>
+
+    <ListView
+        android:id="@+id/word_list"
+        android:layout_width="fill_parent"
+        android:layout_height="0dip"
+        android:layout_weight="1"
+        android:paddingLeft="10dp"
+        android:paddingTop="3dp"
+        android:paddingRight="10dp"
+        android:paddingBottom="3dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/words_bg"/>
 
 </LinearLayout>
