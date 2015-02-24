@@ -46,16 +46,46 @@ public class MainActivity extends Activity implements OnClickListener, TextToSpe
         setContentView(R.layout.activity_main);
         boton=(Button)findViewById(R.id.btnHablar);
         wordList=(ListView)findViewById(R.id.word_list);
+
+        PackageManager packageManager= getPackageManager();
+        List<ResolveInfo> intActivities = packageManager.queryIntentActivities(new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH), 0);
+        if (intActivities.size()!=0){
+            boton.setOnClickListener(this);
+        }else{
+            boton.setEnabled(false);
+            Toast.makeText(this, "aaa... Oops.....Speech not supported", Toast.LENGTH_LONG).show();
+        }
     }
 
 
     @Override
     public void onClick(View v) {
+        if (v.getId()==R.id.btnHablar){
+            listenToSpeech();
+        }
+    }
 
+    private void listenToSpeech(){
+        Intent listenIntent =new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        listenIntent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, getClass().getPackage().getName());
+        listenIntent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Say a word");
+        listenIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        listenIntent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS,10);
+        startActivityForResult(listenIntent, VR_REQUEST);
     }
 
     @Override
     public void onInit(int status) {
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode==VR_REQUEST && resultCode == RESULT_OK){
+            ArrayList<String> suggestedWords =data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+            wordList.setAdapter(new ArrayAdapter<String>(this, R.layout.word, suggestedWords));;
+        }
+
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }
