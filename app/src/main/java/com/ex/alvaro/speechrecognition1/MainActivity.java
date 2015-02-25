@@ -55,6 +55,16 @@ public class MainActivity extends Activity implements OnClickListener, TextToSpe
             boton.setEnabled(false);
             Toast.makeText(this, "aaa... Oops.....Speech not supported", Toast.LENGTH_LONG).show();
         }
+
+        wordList.setOnItemClickListener(new OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                TextView wordView=(TextView)view;
+                String wordChosen=(String) wordView.getText();
+                Log.v("LOG_TAG...", "Escogio: "+wordChosen);
+                Toast.makeText(MainActivity.this, "Dijo: "+wordChosen,Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
 
