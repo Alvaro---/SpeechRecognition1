@@ -51,6 +51,10 @@ public class MainActivity extends Activity implements OnClickListener, TextToSpe
         List<ResolveInfo> intActivities = packageManager.queryIntentActivities(new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH), 0);
         if (intActivities.size()!=0){
             boton.setOnClickListener(this);
+            Intent checkTTSIntent=new Intent();
+            checkTTSIntent.setAction(TextToSpeech.Engine.ACTION_CHECK_TTS_DATA);
+            startActivityForResult(checkTTSIntent, MY_DATA_CHECK_CODE);
+
         }else{
             boton.setEnabled(false);
             Toast.makeText(this, "aaa... Oops.....Speech not supported", Toast.LENGTH_LONG).show();
@@ -63,6 +67,7 @@ public class MainActivity extends Activity implements OnClickListener, TextToSpe
                 String wordChosen=(String) wordView.getText();
                 Log.v("LOG_TAG...", "Escogio: "+wordChosen);
                 Toast.makeText(MainActivity.this, "Dijo: "+wordChosen,Toast.LENGTH_SHORT).show();
+                repeatTTS.speak("Dijiste: "+wordChosen, TextToSpeech.QUEUE_FLUSH, null);
             }
         });
     }
@@ -86,7 +91,10 @@ public class MainActivity extends Activity implements OnClickListener, TextToSpe
 
     @Override
     public void onInit(int status) {
-
+        if (status==TextToSpeech.SUCCESS){
+            Locale loc = new Locale ("spa", "ESP");
+            repeatTTS.setLanguage(loc);
+        }
     }
 
     @Override
@@ -96,6 +104,16 @@ public class MainActivity extends Activity implements OnClickListener, TextToSpe
             wordList.setAdapter(new ArrayAdapter<String>(this, R.layout.word, suggestedWords));;
         }
 
+        if(requestCode==MY_DATA_CHECK_CODE){
+            if (resultCode==TextToSpeech.Engine.CHECK_VOICE_DATA_PASS){
+                repeatTTS=new TextToSpeech(this,this);
+            }else{
+                Intent installTTSIntent=new Intent();
+                installTTSIntent.setAction(TextToSpeech.Engine.ACTION_INSTALL_TTS_DATA);
+                startActivity(installTTSIntent);
+            }
+        }
+
         super.onActivityResult(requestCode, resultCode, data);
-    }
+}
 }
